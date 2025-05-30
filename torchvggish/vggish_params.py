@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-
 """Global parameters for the VGGish model.
 
 See vggish_slim.py for more information.
