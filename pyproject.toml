@@ -10,3 +10,7 @@ dependencies = [
     "soundfile>=0.13.1",
     "torch>=2.7.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
