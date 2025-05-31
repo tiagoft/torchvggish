@@ -7,9 +7,6 @@ from torch import hub
 from . import vggish_input, vggish_params
 
 
-def oi():
-    print("torchvggish.vggish: oi() called")
-
 class VGG(nn.Module):
 
     def __init__(self, features):
@@ -174,15 +171,17 @@ class VGGish(VGG):
                     progress=progress,
                 )
                 # TODO: Convert the state_dict to torch
-                state_dict[
-                    vggish_params.PCA_EIGEN_VECTORS_NAME] = torch.as_tensor(
-                        state_dict[vggish_params.PCA_EIGEN_VECTORS_NAME],
-                        dtype=torch.float,
+                state_dict[vggish_params.PCA_EIGEN_VECTORS_NAME] = \
+                    torch.as_tensor( \
+                        state_dict[vggish_params.PCA_EIGEN_VECTORS_NAME], \
+                        dtype=torch.float, \
                     )
-                state_dict[vggish_params.PCA_MEANS_NAME] = torch.as_tensor(
-                    state_dict[vggish_params.PCA_MEANS_NAME].reshape(-1, 1),
-                    dtype=torch.float,
-                )
+                state_dict[vggish_params.PCA_MEANS_NAME] = \
+                    torch.as_tensor( \
+                        state_dict[vggish_params.PCA_MEANS_NAME] \
+                            .reshape(-1, 1), \
+                        dtype=torch.float, \
+                    )
                 self.pproc.load_state_dict(state_dict)
         self.to(self.device)
 
@@ -196,7 +195,12 @@ class VGGish(VGG):
         return x
 
     def _preprocess(self, x, fs):
-        if isinstance(x, np.ndarray):
+        if isinstance(x, torch.Tensor):
+            raise AttributeError(
+                "Input should be a numpy array, a string path to a WAV file, "
+                "or a numpy array of audio samples."
+            )
+        elif isinstance(x, np.ndarray):
             x = vggish_input.waveform_to_examples(x, fs)
         elif isinstance(x, str):
             x = vggish_input.wavfile_to_examples(x)

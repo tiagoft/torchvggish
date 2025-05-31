@@ -1,17 +1,3 @@
-# Copyright 2017 The TensorFlow Authors All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
 """Defines routines to compute mel spectrogram features from audio waveform."""
 
 import numpy as np
@@ -108,11 +94,13 @@ def hertz_to_mel(frequencies_hertz):
                                                  _MEL_BREAK_FREQUENCY_HERTZ))
 
 
-def spectrogram_to_mel_matrix(num_mel_bins=20,
-                              num_spectrogram_bins=129,
-                              audio_sample_rate=8000,
-                              lower_edge_hertz=125.0,
-                              upper_edge_hertz=3800.0):
+def spectrogram_to_mel_matrix(
+    num_mel_bins=20,
+    num_spectrogram_bins=129,
+    audio_sample_rate=8000,
+    lower_edge_hertz=125.0,
+    upper_edge_hertz=3800.0,
+):
     """Return a matrix that can post-multiply spectrogram rows to make mel.
 
     Returns a np.array matrix A that can be used to post-multiply a matrix S of
@@ -189,6 +177,22 @@ def spectrogram_to_mel_matrix(num_mel_bins=20,
     # coefficient.
     mel_weights_matrix[0, :] = 0.0
     return mel_weights_matrix
+
+
+def log_mel_spectrogram_torch(
+    data,
+    audio_sample_rate=8000,
+    log_offset=0.0,
+    window_length_secs=0.025,
+    hop_length_secs=0.010,
+    **kwargs,
+):
+    window_length_samples = int(round(audio_sample_rate * window_length_secs))
+    hop_length_samples = int(round(audio_sample_rate * hop_length_secs))
+    fft_length = 2**int(np.ceil(np.log(window_length_samples) / np.log(2.0)))
+
+
+    pass
 
 
 def log_mel_spectrogram(
